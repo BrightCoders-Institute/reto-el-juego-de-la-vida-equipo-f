@@ -1,10 +1,17 @@
+require 'cell'
 class GameOfLife
   def initialize(rows, columns)
     # we define our's variables
     @rows = rows
     @columns = columns
     @board = []
-    @neighbours = []
+  end
+
+  def play(generations = 1)
+    i = 0;
+    while i < generations
+      next_generation
+    end
   end
 
   def create_board
@@ -14,7 +21,7 @@ class GameOfLife
   def fill_board
     @board.each_with_index do |row, i| # we enter the board and get the element and his index
       row.each_with_index do |_, j| # same here with each row
-        @board[i][j] = rand(0..1)
+        @board[i][j] = Cell.new(rand(0..1), i, j)
       end
     end
   end
@@ -24,8 +31,22 @@ class GameOfLife
       p rows.join(' ')
     end
   end
+
+  def verify_neightbours()
+
+  end
+
+  def next_generation()
+    @newboard = []
+    Cell.each do |cell|
+    if(cell.live && cell.live.live_neighbours < 2)
+      newboard.push cell
+    end
+    newboard.each(&:toggle!)
+  end
 end
+
 game1 = GameOfLife.new(10, 10)
-game1.createBoard
-game1.fillBoard
-game1.printBoard
+game1.create_board
+game1.fill_board
+game1.print_board
