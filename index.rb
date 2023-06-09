@@ -10,11 +10,12 @@ class GameOfLife
   end
 
   def play(generations = 1)
-    i = 0;
-    while i < generations
+    generations.times do |i|
       @board = next_generation(@board)
+      puts("")
+      puts ("New Board")
       print_board(@board)
-      i += 1
+
     end
   end
 
@@ -42,40 +43,24 @@ class GameOfLife
   end
 
   def init_board
+    puts ("Old Board")
     @board = fill_board(create_board)
     print_board(@board)
   end
 
   def next_generation(old_board)
-    newboard = create_board
-    copy_board = old_board.clone
+    new_board = create_board
     old_board.each_with_index do |rows, i|
       rows.each_with_index do |cell, j|
-        #por cada celula, le mandamos una copia y verificamos su estado
-        cell.verify_neighbours(copy_board)
-        newboard[i][j] = cell
+        new_cell = cell.dup
+        new_cell.verify_neighbours(old_board)
+        new_cell.verify_state
+        new_board[i][j] = new_cell
       end
     end
-    newboard
+    new_board
   end
 end
 
-game1 = GameOfLife.new(3, 3)
+game1 = GameOfLife.new(10, 10)
 game1.play(1)
-
-
-# 1 2 3
-# 4 5 6
-# 7 8 9
-
-# 0 0 0       # 0 0 0       # 0 0 0
-# 0 1 2    1  # 1 2 3    2  # 2 3 0   3
-# 4 5 6       # 4 5 6       # 5 6 0
-
-# 0 1 2       # 1 2 3       # 2 3 0
-# 0 4 5    4  # 4 5 6   5   # 5 6 0   6
-# 0 7 8       # 7 8 9       # 8 9 0
-
-# 0 4 5       # 4 5 6       # 5 6 0
-# 0 7 8    7  # 7 8 9   8   # 8 9 0   9
-# 0 0 0       # 0 0 0       # 0 0 0

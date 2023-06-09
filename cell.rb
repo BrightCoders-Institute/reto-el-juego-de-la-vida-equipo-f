@@ -7,44 +7,42 @@ class Cell
     @neighbours = []
   end
 
-  def new_state(newstate)
-    @state = newstate;
+  def new_state(new_state)
+    @state = new_state
   end
 
   def obtain_state
     @state
   end
-  #recibimos la copia
-  def verify_neighbours(board)
 
-    # (0,0) (0,1) (0,2)
-    # (1,0) (1,1) (1,2)
-    # (2,0) (2,1) (2,2)
-    (board[@position_rows - 1][@position_columns - 1]) # 0 0
-    (board[@position_rows - 1][@position_columns]) # 0 1
-    (board[@position_rows - 1][@position_columns + 1]) # 0 2
-    (board[@position_rows][@position_columns - 1]) # 1 0
-    (board[@position_rows][@position_columns + 1]) # 1 2
-    (board[@position_rows + 1][@position_columns - 1]) # 2 0
-    (board[@position_rows + 1][@position_columns]) # 2 1
-    (board[@position_rows + 1][@position_columns + 1]) # 2 2
+  def verify_neighbours(board)
+    @neighbours = []
+    (-1..1).each do |i|
+      (-1..1).each do |j|
+        next if i == 0 && j == 0
+
+        neighbour_row = @position_rows + i
+        neighbour_column = @position_columns + j
+
+        if neighbour_row >= 0 && neighbour_row < board.length && neighbour_column >= 0 && neighbour_column < board[0].length
+          neighbour_state = board[neighbour_row][neighbour_column].obtain_state
+          @neighbours << neighbour_state
+        end
+      end
+    end
   end
 
-  #Cell Rules Test
   def verify_state
     live_neighbours = verify_live_neighbours
-    if(@state==1 && live_neighbours.length() < 2 || @state == 1 && live_neighbours.length() > 3) # kill cell
-      new_state(0)#add parameter
-    end
-    if(@state==0 && live_neighbours.length() == 3)# born a cell
+
+    if @state == 1 && (live_neighbours.length < 2 || live_neighbours.length > 3) # muerte por soledad o sobrepoblación
+      new_state(0)
+    elsif @state == 0 && live_neighbours.length == 3 # nacimiento de una nueva célula
       new_state(1)
     end
-
   end
-  #We define a method to verifposition_columns the lives of neighboring cells
+
   def verify_live_neighbours
-    @neighbours.select do |n|
-      n.obtain_state == 1
-    end
+    @neighbours.select { |n| n == 1 }
   end
 end
