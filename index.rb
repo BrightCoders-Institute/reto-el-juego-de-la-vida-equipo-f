@@ -1,5 +1,7 @@
 # frozen_string_literal: true
+
 require './cell'
+# This class implements Game of Life
 class GameOfLife
   def initialize(rows, columns)
     # we define our's variables
@@ -10,12 +12,11 @@ class GameOfLife
   end
 
   def play(generations = 1)
-    generations.times do |i|
+    generations.times do |_i|
       @board = next_generation(@board)
-      puts("")
-      puts ("New Board")
+      puts('')
+      puts('New Board')
       print_board(@board)
-
     end
   end
 
@@ -43,7 +44,7 @@ class GameOfLife
   end
 
   def init_board
-    puts ("Old Board")
+    puts('Old Board')
     @board = fill_board(create_board)
     print_board(@board)
   end
@@ -53,7 +54,7 @@ class GameOfLife
     old_board.each_with_index do |rows, i|
       rows.each_with_index do |cell, j|
         new_cell = cell.dup
-        new_cell.verify_neighbours(old_board)
+        new_cell.verify_live_n(old_board)
         new_cell.verify_state
         new_board[i][j] = new_cell
       end
